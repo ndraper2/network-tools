@@ -6,7 +6,7 @@ server_socket = socket.socket(
     socket.IPPROTO_IP)
 server_socket.bind(('127.0.0.1', 50000))
 server_socket.listen(10)
-i = 3  # the exact number of tests we have
+i = 4  # the exact number of tests we have
 while i > 0:
     conn, addr = server_socket.accept()
     buffsize = 16
@@ -14,6 +14,7 @@ while i > 0:
     done = False
     while not done:
         part = conn.recv(buffsize)
+        print part
         if len(part) < buffsize:
             done = True
         msg = "{}{}".format(msg, part)
