@@ -9,7 +9,14 @@ server_socket.listen(10)
 i = 3  # the exact number of tests we have
 while i > 0:
     conn, addr = server_socket.accept()
-    msg = conn.recv(4096)
+    buffsize = 16
+    msg = ""
+    done = False
+    while not done:
+        part = conn.recv(buffsize)
+        if len(part) < buffsize:
+            done = True
+        msg = "{}{}".format(msg, part)
     out = "{}{}".format("I heard: ", msg)
     conn.sendall(out)
     conn.close()
