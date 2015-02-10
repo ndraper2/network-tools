@@ -13,3 +13,10 @@ def test_unicode_string(capfd):
     os.system(msg)
     out, err = capfd.readouterr()
     assert out == u"I heard: test character ó\n"
+
+
+def test_unicode_above_255(capfd):
+    msg = u"python echo_client.py 'test character ɯ'".encode('utf-8')
+    os.system(msg)
+    out, err = capfd.readouterr()
+    assert out == u"I heard: test character ɯ\n"
