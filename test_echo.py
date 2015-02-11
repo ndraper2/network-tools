@@ -1,29 +1,22 @@
 # -*- coding: utf-8 -*-
-import os
+from echo_client import echo_client
 
 
-def test_simple_string(capfd):
-    os.system("python echo_client.py 'This is the message to send'")
-    out, err = capfd.readouterr()
-    assert out == "I heard: This is the message to send\n"
+def test_simple_string():
+    response = echo_client('This is the message to send')
+    assert response == "I heard: This is the message to send"
 
 
-def test_same_size_as_buffer(capfd):
-    msg = u"python echo_client.py 'aaaaaaaabbbbbbbb'".encode('utf-8')
-    os.system(msg)
-    out, err = capfd.readouterr()
-    assert out == u"I heard: aaaaaaaabbbbbbbb\n"
+def test_same_size_as_buffer():
+    response = echo_client('aaaaaaaabbbbbbbb'.encode('utf-8'))
+    assert response == u"I heard: aaaaaaaabbbbbbbb"
 
 
-def test_unicode_string(capfd):
-    msg = u"python echo_client.py 'test character ó'".encode('utf-8')
-    os.system(msg)
-    out, err = capfd.readouterr()
-    assert out == u"I heard: test character ó\n"
+def test_unicode_string():
+    response = echo_client('test character ó'.encode('utf-8'))
+    assert response == u"I heard: test character ó"
 
 
-def test_unicode_above_255(capfd):
-    msg = u"python echo_client.py 'test character ɯ'".encode('utf-8')
-    os.system(msg)
-    out, err = capfd.readouterr()
-    assert out == u"I heard: test character ɯ\n"
+def test_unicode_above_255():
+    response = echo_client('test character ɯ'.encode('utf-8'))
+    assert response == u"I heard: test character ɯ"

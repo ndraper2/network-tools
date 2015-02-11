@@ -16,7 +16,6 @@ def echo_server():
             done = False
             while not done:
                 part = conn.recv(buffsize)
-                print part
                 if len(part) < buffsize:
                     done = True
                 msg = "{}{}".format(msg, part)
@@ -25,3 +24,7 @@ def echo_server():
             conn.close()
     except KeyboardInterrupt:
         server_socket.close()
+
+
+if __name__ == '__main__':
+    echo_server()

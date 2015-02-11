@@ -3,6 +3,7 @@ import sys
 
 
 def echo_client(msg):
+    msg = msg.decode('utf-8')
     client_socket = socket.socket(
         socket.AF_INET,
         socket.SOCK_STREAM,
