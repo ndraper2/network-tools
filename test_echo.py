@@ -8,15 +8,15 @@ def test_simple_string():
 
 
 def test_same_size_as_buffer():
-    response = echo_client('aaaaaaaabbbbbbbb'.encode('utf-8'))
-    assert response == u"I heard: aaaaaaaabbbbbbbb"
+    response = echo_client(u'aaaaaaaabbbbbbbb'.encode('utf-8'))
+    assert response.decode('utf-8') == u"I heard: aaaaaaaabbbbbbbb"
 
 
 def test_unicode_string():
-    response = echo_client('test character ó'.encode('utf-8'))
-    assert response == u"I heard: test character ó"
+    response = echo_client(u'test character ó'.encode('utf-8'))
+    assert response.decode('utf-8') == u"I heard: test character ó"
 
 
 def test_unicode_above_255():
-    response = echo_client('test character ɯ'.encode('utf-8'))
-    assert response == u"I heard: test character ɯ"
+    response = echo_client(u'test character ɯ'.encode('utf-8'))
+    assert response.decode('utf-8') == u"I heard: test character ɯ"

@@ -10,7 +10,7 @@ def echo_client(msg):
         socket.IPPROTO_IP)
 
     client_socket.connect(('127.0.0.1', 50000))
-    client_socket.sendall(msg)
+    client_socket.sendall(msg.encode('utf-8'))
     client_socket.shutdown(socket.SHUT_WR)
     buffsize = 16
     response = ""
