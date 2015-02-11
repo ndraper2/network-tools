@@ -1,7 +1,7 @@
 import socket
 
 
-def server_listener():
+def echo_server():
     server_socket = socket.socket(
         socket.AF_INET,
         socket.SOCK_STREAM,
