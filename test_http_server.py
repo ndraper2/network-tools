@@ -2,6 +2,27 @@
 from __future__ import unicode_literals
 
 from echo_client import echo_client
+from http_server import response_error, response_ok, parse_request
+
+
+def test_response_ok():
+    response = response_ok('/path/to/file.txt')
+    assert '200 OK' in response
+    assert 'text/plain;' in response
+    assert 'path/to/file.txt' in response
+
+
+def test_response_error():
+    response = response_error(404, 'Page Not Found')
+    assert '404 Page Not Found' in response
+
+
+def test_parse_request():
+    response = parse_request("GET /path/to/file.txt HTTP/1.1")
+    response = response.decode('utf-8')
+    assert '200 OK' in response
+    assert 'text/plain;' in response
+    assert 'path/to/file.txt' in response
 
 
 def test_best_case():

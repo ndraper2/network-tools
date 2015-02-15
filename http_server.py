@@ -37,7 +37,6 @@ def response_ok(uri):
     content_type = "Content-Type: {}; charset=UTF-8".format(guess)
     headers = "{}\r\n{}\r\n{}\r\n\r\n".format(code, date, content_type)
     response = "{}{}\r\n".format(headers, uri)
-    response = response.encode('utf-8')
     return response
 
 
@@ -46,7 +45,6 @@ def response_error(err, msg):
     date = email.utils.formatdate(usegmt=True)
     content_type = "Content-Type: text/html; charset=UTF-8"
     response = "{}\r\n{}\r\n{}\r\n\r\n".format(code, date, content_type)
-    response = response.encode('utf-8')
     return response
 
 
@@ -62,7 +60,7 @@ def parse_request(msg):
         response = response_error(505, "HTTP Version Not Supported")
     else:
         response = response_ok(words[1])
-    return response
+    return response.encode('utf-8')
 
 
 if __name__ == '__main__':
