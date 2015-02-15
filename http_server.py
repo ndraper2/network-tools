@@ -5,7 +5,7 @@ import email.utils
 import mimetypes
 
 
-def echo_server():
+def http_server():
     server_socket = socket.socket(
         socket.AF_INET,
         socket.SOCK_STREAM,
@@ -22,16 +22,12 @@ def echo_server():
                 part = conn.recv(buffsize)
                 if len(part) < buffsize:
                     done = True
-                msg = "{}{}".format(msg, part)
+                msg = b"{}{}".format(msg, part)
             out = parse_request(msg)
             conn.sendall(out)
             conn.close()
     except KeyboardInterrupt:
         server_socket.close()
-
-
-if __name__ == '__main__':
-    echo_server()
 
 
 def response_ok(uri):
@@ -46,7 +42,7 @@ def response_ok(uri):
 
 
 def response_error(err, msg):
-    code = "HTTP1.1 {} {}".format(err, msg)
+    code = "HTTP/1.1 {} {}".format(err, msg)
     date = email.utils.formatdate(usegmt=True)
     content_type = "Content-Type: text/html; charset=UTF-8"
     response = "{}\r\n{}\r\n{}\r\n\r\n".format(code, date, content_type)
@@ -63,7 +59,11 @@ def parse_request(msg):
     if words[0] != "GET":
         response = response_error(405, 'Method not allowed\r\nAllow: GET')
     elif words[2] != "HTTP/1.1":
-        response = response_error(505, "This server only supports HTTP 1.1")
+        response = response_error(505, "HTTP Version Not Supported")
     else:
         response = response_ok(words[1])
     return response
+
+
+if __name__ == '__main__':
+    http_server()
