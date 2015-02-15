@@ -33,6 +33,7 @@ def test_http10():
         in_text = response.decode('utf-8')
     assert '505 HTTP Version Not Supported' in in_text
 
+
 def test_unicode_path():
     msg = 'GET /path/to/fileɯ.png HTTP/1.1'
     out = msg.encode('utf-8')
