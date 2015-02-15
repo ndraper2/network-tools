@@ -19,8 +19,7 @@ def echo_server():
                 if len(part) < buffsize:
                     done = True
                 msg = "{}{}".format(msg, part)
-            out = "{}{}".format("I heard: ", msg)
-            conn.sendall(out)
+            conn.sendall(msg)
             conn.close()
     except KeyboardInterrupt:
         server_socket.close()
