@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 import socket
 import email.utils
+import mimetypes
 
 
 def echo_server():
@@ -22,7 +23,7 @@ def echo_server():
                 if len(part) < buffsize:
                     done = True
                 msg = "{}{}".format(msg, part)
-            out = "{}{}".format("I heard: ", msg)
+            out = parse_request(msg)
             conn.sendall(out)
             conn.close()
     except KeyboardInterrupt:
@@ -33,29 +34,36 @@ if __name__ == '__main__':
     echo_server()
 
 
-def response_ok():
-    response = ""
+def response_ok(uri):
     date = email.utils.formatdate(usegmt=True)
     code = "HTTP/1.1 200 OK"
+    guess = mimetypes.guess_type(uri)[0]
+    content_type = "Content-Type: {}; charset=UTF-8".format(guess)
+    headers = "{}\r\n{}\r\n{}\r\n\r\n".format(code, date, content_type)
+    response = "{}{}\r\n".format(headers, uri)
+    response = response.encode('utf-8')
+    return response
+
+
+def response_error(err, msg):
+    code = "HTTP1.1 {} {}".format(err, msg)
+    date = email.utils.formatdate(usegmt=True)
     content_type = "Content-Type: text/html; charset=UTF-8"
     response = "{}\r\n{}\r\n{}\r\n\r\n".format(code, date, content_type)
     response = response.encode('utf-8')
     return response
 
 
-def response_error(err, msg):
-    if err == 405:
-        response = ""
-        code = "HTTP1.1"
-    pass
-
-
 def parse_request(msg):
+    if isinstance(msg, str):
+        msg = msg.decode('utf-8')
     lines = msg.split('\r\n')
     firstline = lines[0]
     words = firstline.split(' ')
     if words[0] != "GET":
-        response_error(405, 'Method not allowed')
-    if words[2] != "HTTP/1.1":
-        response_error(505, "This server only supports HTTP 1.1")
-    return words
+        response = response_error(405, 'Method not allowed\r\nAllow: GET')
+    elif words[2] != "HTTP/1.1":
+        response = response_error(505, "This server only supports HTTP 1.1")
+    else:
+        response = response_ok(words[1])
+    return response
