@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 import socket
 import email.utils
 import mimetypes
+from email.mime.image import MIMEImage
+from email.mime.text import MIMEText
 
 
 def http_server():
@@ -61,6 +63,16 @@ def parse_request(msg):
     else:
         response = response_ok(words[1])
     return response.encode('utf-8')
+
+
+def resolve_uri(uri):
+    guess = mimetypes.guess_type(uri)[0]
+    main, sub = guess.split('/')
+    if main == 'text':
+        f = open('.{}'.format(uri))
+        txt = MIMEText(f.read(), _subtype=sub)
+        f.close()
+        return txt
 
 
 if __name__ == '__main__':

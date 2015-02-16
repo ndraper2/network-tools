@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from echo_client import echo_client
 from http_server import response_error, response_ok, parse_request
-
+from http_server import resolve_uri
 
 def test_response_ok():
     response = response_ok('/path/to/file.txt')
@@ -23,6 +23,11 @@ def test_parse_request():
     assert '200 OK' in response
     assert 'text/plain;' in response
     assert 'path/to/file.txt' in response
+
+
+def test_resolve_uri():
+    body = resolve_uri('/webroot/sample.txt')
+    print body
 
 
 def test_best_case():
